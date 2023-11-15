@@ -1,0 +1,9 @@
+# Sudoku Solver in C# 12
+
+I recently started playing Sudoku in the games section of a popular news site.
+
+I quickly figured I didn't know how to solve the non easy ones, so I learned the patterns to solve them.
+
+I figured my computer would be a lot faster at solving them than I am, so I wrote this solver. It's by no mean complete.
+
+But right now it has solved all the “Hard” puzzles that the NYT threw at me recently.
