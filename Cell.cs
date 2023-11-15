@@ -1,15 +1,15 @@
 struct Cell(ushort value)
 {
     /*
-    private const ushort _1  = 0b0000_0000_0000_0001;
-    private const ushort _2  = 0b0000_0000_0000_0010;
-    private const ushort _3  = 0b0000_0000_0000_0100;
-    private const ushort _4  = 0b0000_0000_0000_1000;
-    private const ushort _5  = 0b0000_0000_0001_0000;
-    private const ushort _6  = 0b0000_0000_0010_0000;
-    private const ushort _7  = 0b0000_0000_0100_0000;
-    private const ushort _8  = 0b0000_0000_1000_0000;
-    private const ushort _9  = 0b0000_0001_0000_0000;
+    1  = 0b0000_0000_0000_0001;
+    2  = 0b0000_0000_0000_0010;
+    3  = 0b0000_0000_0000_0100;
+    4  = 0b0000_0000_0000_1000;
+    5  = 0b0000_0000_0001_0000;
+    6  = 0b0000_0000_0010_0000;
+    7  = 0b0000_0000_0100_0000;
+    8  = 0b0000_0000_1000_0000;
+    9  = 0b0000_0001_0000_0000;
     */
 
     private const ushort _hasCandidates = 0b1000_0000_0000_0000;
