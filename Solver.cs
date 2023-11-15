@@ -2,12 +2,12 @@ readonly struct Solver(Game game)
 {
     public bool TrySolve()
     {
-        int iteration = 0;
+        // int iteration = 0;
 
         while (!IsComplete())
         {
-            Console.WriteLine("Iteration: " + iteration++);
-            Print();
+            // Console.WriteLine("Iteration: " + iteration++);
+            // Print();
 
             RemoveCandidates();
 
@@ -23,6 +23,8 @@ readonly struct Solver(Game game)
 
             TryFindPointingPairs();
             TryFindNakedPairs();
+
+            TryFindHiddenPairs();
         }
 
         return IsValid();
@@ -198,20 +200,7 @@ readonly struct Solver(Game game)
                 RemoveCandidateInContainer(Game.Box(Game.BoxOf(index1)), index1, index2, value);
                 RemoveCandidateInContainer(Game.Row(Game.RowOf(index1)), index1, index2, value);
             }
-
-            if (TryFindPointingPair(Game.Box(i), out index1, out index2, out value))
-            {
-                if (Game.RowOf(index1) == Game.RowOf(index2))
-                {
-                    RemoveCandidateInContainer(Game.Row(Game.RowOf(index1)), index1, index2, value);
-                }
-
-                if (Game.ColumnOf(index1) == Game.ColumnOf(index2))
-                {
-                    RemoveCandidateInContainer(Game.Column(Game.ColumnOf(index1)), index1, index2, value);
-                }
-            }
-        }        
+        }
     }
 
     private bool TryFindPointingPair(ReadOnlySpan<byte> indexes, out int index1, out int index2, out ushort value)
@@ -388,6 +377,92 @@ readonly struct Solver(Game game)
         }
 
         return false;
+    }
+
+    private void TryFindHiddenPairs()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            if (TryFindHiddenPair(Game.Row(i), out int index1, out int index2, out ushort candidate1, out ushort candidate2))
+            {
+                RemoveCandidatesInCell(index1, candidate1, candidate2);
+                RemoveCandidatesInCell(index2, candidate1, candidate2);
+            }
+
+            if (TryFindHiddenPair(Game.Column(i), out index1, out index2, out  candidate1, out candidate2))
+            {
+                RemoveCandidatesInCell(index1, candidate1, candidate2);
+                RemoveCandidatesInCell(index2, candidate1, candidate2);
+            }
+        }
+    }
+
+    private bool TryFindHiddenPair(ReadOnlySpan<byte> indexes, out int index1, out int index2, out ushort candidate1, out ushort candidate2)
+    {
+        Span<byte> candidates = stackalloc byte[9];
+
+        for (int i = 0; i < indexes.Length; i++)
+        {
+            for (int j = 1; j < 10; j++)
+            {
+                if (game[indexes[i]].HasCandidate(j))
+                {
+                    candidates[j - 1]++;
+                }
+            }
+        }
+
+        index1 = -1;
+        index2 = -1;
+        candidate1 = 0;
+        candidate2 = 0;
+
+        for (int i = 0; i < indexes.Length; i++)
+        {
+            int count = 0;
+            for (int j = 1; j < 10; j++)
+            {
+                if (game[indexes[i]].HasCandidate(j) && candidates[j - 1] == 2)
+                {
+                    count++;
+                    if (count == 1)
+                    {
+                        candidate1 = (ushort)j;
+                    }
+                    else if (count == 2)
+                    {
+                        candidate2 = (ushort)j;
+                    }
+                }
+            }
+
+            if (count == 2)
+            {
+                index1 = indexes[i];
+                for (int j = i + 1; j < indexes.Length; j++)
+                {
+                    if (game[indexes[j]].HasCandidate(candidate1) && game[indexes[j]].HasCandidate(candidate2))
+                    {
+                        index2 = indexes[j];
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void RemoveCandidatesInCell(int index, ushort candidate1, ushort candidate2)
+    {
+        ref var cell = ref game[index];
+        for (ushort i = 1; i < 10; i++)
+        {
+            if (cell.HasCandidate(i) && i != candidate1 && i != candidate2)
+            {
+                cell.RemoveCandidate(i);
+            }
+        }
     }
 
     private CellEnumerator Cells(ReadOnlySpan<byte> indexes) => new(game, indexes);
