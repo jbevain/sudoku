@@ -354,16 +354,16 @@ readonly struct Solver(Game game)
                 index1 = indexes[i];
                 index2 = indexes[j];
 
-                for (int k = 1; k < 10; k++)
+                for (ushort k = 1; k < 10; k++)
                 {
                     if (value1 == 0 && cell1.HasCandidate(k))
                     {
-                        value1 = (ushort)k;
+                        value1 = k;
                     }
 
                     if (value1 != 0 && cell2.HasCandidate(k))
                     {
-                        value2 = (ushort)k;
+                        value2 = k;
                     }
                 }
 
@@ -420,18 +420,18 @@ readonly struct Solver(Game game)
         for (int i = 0; i < indexes.Length; i++)
         {
             int count = 0;
-            for (int j = 1; j < 10; j++)
+            for (ushort j = 1; j < 10; j++)
             {
                 if (game[indexes[i]].HasCandidate(j) && candidates[j - 1] == 2)
                 {
                     count++;
                     if (count == 1)
                     {
-                        candidate1 = (ushort)j;
+                        candidate1 = j;
                     }
                     else if (count == 2)
                     {
-                        candidate2 = (ushort)j;
+                        candidate2 = j;
                     }
                 }
             }
