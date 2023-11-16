@@ -237,7 +237,7 @@ static Game ParseGame(string input)
         }
         else
         {
-            game[i] = new((ushort)(c - '0'));
+            game[i] = new((short)(c - '0'));
         }
     }
 
