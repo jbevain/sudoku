@@ -10,6 +10,9 @@ readonly struct Solver(Game game)
             // Print();
 
             RemoveCandidates();
+            TryFindPointingPairs();
+            TryFindNakedPairs();
+            TryFindHiddenPairs();
 
             if (TryFindNakedSingles())
             {
@@ -21,10 +24,7 @@ readonly struct Solver(Game game)
                continue;
             }
 
-            TryFindPointingPairs();
-            TryFindNakedPairs();
-
-            TryFindHiddenPairs();
+            return false;
         }
 
         return IsValid();
